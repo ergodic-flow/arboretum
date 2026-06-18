@@ -1,3 +1,5 @@
+import math
+
 from polars import Series
 
 
@@ -13,6 +15,24 @@ def compute_gini_impurity(labels: Series) -> float:
     sum_squared_probs = sum((count / total_samples) ** 2 for count in counts)
 
     return 1.0 - sum_squared_probs
+
+
+def compute_entropy_impurity(labels: Series) -> float:
+    """
+    Calculates the entropy impurity for a list/Series of class labels.
+    """
+    total_samples = len(labels)
+    if total_samples == 0:
+        return 0.0
+
+    counts = labels.value_counts()["count"]
+    entropy = 0.0
+
+    for count in counts:
+        probability = count / total_samples
+        entropy -= probability * math.log2(probability)
+
+    return entropy
 
 
 def compute_variance_impurity(labels: Series) -> float:
@@ -65,6 +85,20 @@ def compute_gini_gain(
         left_labels,
         right_labels,
         compute_gini_impurity,
+    )
+
+
+def compute_information_gain(
+    parent_labels: Series, left_labels: Series, right_labels: Series
+) -> float:
+    """
+    Calculates the Information Gain achieved by a classification split.
+    """
+    return compute_impurity_reduction(
+        parent_labels,
+        left_labels,
+        right_labels,
+        compute_entropy_impurity,
     )
 
 
