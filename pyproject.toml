@@ -1,0 +1,17 @@
+[project]
+name = "arboretum"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "polars>=1.41.2",
+]
+
+[tool.uv]
+default-groups = ["examples"]
+
+[dependency-groups]
+examples = [
+    "scikit-learn>=1.9.0",
+]
